@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand
+
 from land_registry.models import PropertyProfile
+
 
 class Command(BaseCommand):
     help = "Delete all PropertyProfile records"

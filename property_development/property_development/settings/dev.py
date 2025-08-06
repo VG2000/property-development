@@ -1,6 +1,5 @@
-from . import base
+from .base import *  # noqa: F403,F401
 
 DEBUG = True
 
-ALLOWED_HOSTS = base.ALLOWED_HOSTS + ["*"]
-
+ALLOWED_HOSTS += ["*"]  # caution: dev only

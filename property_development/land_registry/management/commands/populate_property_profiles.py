@@ -1,12 +1,14 @@
-import re
 import logging
+import re
+
 import requests
+from django.contrib.gis.geos import Point
 from django.core.management.base import BaseCommand
 from django.db.models import Max
-from django.contrib.gis.geos import Point
-from land_registry.models import EPCRecord, LandRegistrySale, PropertyProfile
 from rapidfuzz import fuzz
 from tqdm import tqdm
+
+from land_registry.models import EPCRecord, LandRegistrySale, PropertyProfile
 
 logger = logging.getLogger("land_registry")
 
@@ -15,7 +17,7 @@ class Command(BaseCommand):
 
     COMMON_NOISE_WORDS = [
     r"\bflat\b", r"\bapartment\b", r"\bapt\b", r"\bunit\b", r"\bthe\b", r"\bhouse\b",
-    r"\bproperty\b", r"\bfarm\b", r"\bcottage\b", r"\bbungalow\b", r"\bvilla\b", r"\bold\b"
+    r"\bproperty\b", r"\bfarm\b", r"\bbungalow\b", r"\bvilla\b", r"\bold\b"
     ]
 
     ADDRESS_CLEANER = re.compile("|".join(COMMON_NOISE_WORDS), re.IGNORECASE)
@@ -36,10 +38,10 @@ class Command(BaseCommand):
                     street=sale_key["street"],
                     deed_date=sale_key["latest_date"]
                 )
-                print(f"Processing sale: {sale})")
+                # print(f"Processing sale: {sale})")
 
                 epc_qs = EPCRecord.objects.filter(postcode=sale.postcode)
-                print(f"EPCRecords: {epc_qs})")
+                # print(f"EPCRecords: {epc_qs})")
                 best_epc = self.best_match(epc_qs, sale)
 
                 if not best_epc:
@@ -99,10 +101,11 @@ class Command(BaseCommand):
 
     def best_match(self, epc_queryset, sale_obj):
         sale_clean = self.clean_address(sale_obj.full_address)
+        sale_tokens = set(sale_clean.split())
         sale_numbers = self.extract_numbers(sale_clean)
         sale_postcode = sale_obj.postcode.replace(" ", "").upper()
 
-        # Try shortcut: if only one number in LR and postcode matches, return EPC with same number
+        # ---- Fast path: single number + same postcode ---------------------------
         if len(sale_numbers) == 1:
             for epc in epc_queryset:
                 epc_clean = self.clean_address(epc.full_address)
@@ -111,38 +114,106 @@ class Command(BaseCommand):
 
                 if sale_numbers[0] in epc_numbers and sale_postcode == epc_postcode:
                     logger.info(
-                        f"[FastMatch] Number + postcode match: LR='{sale_obj.full_address}' ↔ EPC='{epc.full_address}'"
+                        "[FastMatch] Number+postcode: LR='%s' ↔ EPC='%s'",
+                        sale_obj.full_address, epc.full_address
                     )
                     return epc
 
-        # Fall back to fuzzy match
-        best_score = 0
+        # ---- Fallback: fuzzy + hybrid boosts -----------------------------------
+        best_score = 0.0
         best_epc = None
 
         for epc in epc_queryset:
             epc_clean = self.clean_address(epc.full_address)
+            epc_tokens = set(epc_clean.split())
             epc_numbers = self.extract_numbers(epc_clean)
-            epc_postcode = epc.postcode.replace(" ", "").upper()
 
+            # If LR has exactly one number and EPC doesn't contain it, skip early
             if len(sale_numbers) == 1 and sale_numbers[0] not in epc_numbers:
                 continue
 
-            score = fuzz.token_sort_ratio(sale_clean, epc_clean)
+            base_score = fuzz.token_sort_ratio(sale_clean, epc_clean)
+            score = float(base_score)
+            boost_applied = []
+
+            # Always check token-subset
+            if sale_tokens and sale_tokens.issubset(epc_tokens):
+                score += 15
+                boost_applied.append("token_subset(+15)")
+
+            # Add boost if LR token appears fully in EPC tokens (short-name boost)
+            if any(token in epc_tokens for token in sale_tokens):
+                score += 10
+                boost_applied.append("token_overlap(+10)")
+
+            # Substring and prefix boosts (only if base is halfway plausible)
+            if base_score > 40:
+                if sale_clean in epc_clean:
+                    score += 20
+                    boost_applied.append("substring(+20)")
+                elif epc_clean.startswith(sale_clean):
+                    score += 10
+                    boost_applied.append("prefix(+10)")
+
+            if score > 100:
+                score = 100.0
+
             logger.info(
-                f"Fuzzy score={score} between LR='{sale_clean}' and EPC='{epc_clean}' "
-                f"(LR ID={sale_obj.pk}, EPC PK={epc.pk})"
+                "Fuzzy score=%.2f (base=%.2f%s) between LR='%s' and EPC='%s' (LR ID=%s, EPC PK=%s)",
+                score,
+                base_score,
+                f", boosts={'+'.join(boost_applied)}" if boost_applied else "",
+                sale_clean,
+                epc_clean,
+                getattr(sale_obj, 'pk', 'Unknown'),
+                getattr(epc, 'pk', 'Unknown'),
             )
 
             if score > best_score:
                 best_score = score
                 best_epc = epc
 
-        if best_score < 75:
+        if best_epc and best_score >= 70:
+            return best_epc
+
+        # ---- Final fallback: Levenshtein ---------------------------------------
+        best_lev_score = 0.0
+        best_lev_epc = None
+
+        for epc in epc_queryset:
+            epc_raw = epc.full_address or ""
+            sale_raw = sale_obj.full_address or ""
+
+            lev_score = fuzz.ratio(sale_raw.lower(), epc_raw.lower())
+
             logger.info(
-                f"No EPC match for sale '{sale_obj.full_address}' — best score was {best_score}"
+                "[LevenshteinFallback] Char score=%.2f between raw LR='%s' and EPC='%s'",
+                lev_score,
+                sale_raw,
+                epc_raw,
             )
 
-        return best_epc if best_score >= 75 else None
+            if lev_score > best_lev_score:
+                best_lev_score = lev_score
+                best_lev_epc = epc
+
+        if best_lev_score >= 90:
+            logger.info(
+                "[LevenshteinFallback] Accepted char match: score=%.2f, LR='%s', EPC='%s'",
+                best_lev_score,
+                sale_obj.full_address,
+                best_lev_epc.full_address,
+            )
+            return best_lev_epc
+
+        logger.error(
+            "No EPC match for sale '%s' — best fuzzy score was %.2f, best Levenshtein %.2f",
+            sale_obj.full_address,
+            best_score,
+            best_lev_score,
+        )
+
+        return None
 
 
     def geocode_postcode(self, postcode):
@@ -161,7 +232,7 @@ class Command(BaseCommand):
         area = epc.total_floor_area
 
         if hab is None:
-            logger.warning(f"Missing habitable_rooms for EPC @ {epc.full_address}, pk={epc.pk}")
+            logger.info(f"Missing habitable_rooms for EPC @ {epc.full_address}, pk={epc.pk}")
             return 1
 
         baseline = hab - 2

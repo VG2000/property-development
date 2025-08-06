@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import LandRegistrySale, EPCRecord, PropertyProfile
+from .models import EPCRecord, LandRegistrySale, PropertyProfile
 
 
 @admin.register(LandRegistrySale)

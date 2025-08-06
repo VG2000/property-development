@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.gis.db import models as gis_models
+from django.db import models
+
 
 class LandRegistrySale(models.Model):
     unique_id = models.CharField(max_length=64, primary_key=True)

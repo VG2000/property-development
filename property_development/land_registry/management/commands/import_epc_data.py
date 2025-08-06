@@ -1,9 +1,11 @@
 import csv
-from django.core.management.base import BaseCommand
-from land_registry.models import EPCRecord
-from datetime import datetime
-from tqdm import tqdm
 import logging
+from datetime import datetime
+
+from django.core.management.base import BaseCommand
+from tqdm import tqdm
+
+from land_registry.models import EPCRecord
 
 logger = logging.getLogger('land_registry')
 
@@ -41,7 +43,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"Imported {count} EPC records"))
 
     def get_line_count(self, file_path):
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding='utf-8') as f:
             return sum(1 for _ in f) - 1  # subtract header
 
 def parse_float(val):
