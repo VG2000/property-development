@@ -7,6 +7,11 @@ while ! nc -z "$POSTGRES_HOST" "$POSTGRES_PORT"; do
 done
 echo "PostgreSQL is up"
 
+# Apply migrations
 python manage.py migrate
 
-exec "$@"
+# Collect static files (needed for Leaflet map in admin!)
+python manage.py collectstatic --noinput
+
+# Run development server
+exec python manage.py runserver 0.0.0.0:8000

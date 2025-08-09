@@ -1,0 +1,8 @@
+from django.urls import path
+from .views import map_data_htmx_view
+from django.views.generic import TemplateView
+
+urlpatterns = [
+    path("map/", TemplateView.as_view(template_name="map.html")),
+    path("map-data/", map_data_htmx_view, name="map-data"),
+]

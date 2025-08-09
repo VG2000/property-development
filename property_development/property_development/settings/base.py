@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-
 import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -27,7 +26,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.gis",
-    # your apps
     "land_registry",
     "maps",
     "projects",
@@ -76,12 +74,8 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
 ]
 
 LANGUAGE_CODE = "en-gb"
@@ -90,58 +84,38 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Static files
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# 👇 This ensures your project-root /static folder (with css/output.css) is collected
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Logging config from environment
-LOG_LEVEL = env('LOG_LEVEL', default='WARNING')
-LOG_FILE = env('LOG_FILE', default='logs/django.log')
+LOG_LEVEL = env("LOG_LEVEL", default="WARNING")
+LOG_FILE = env("LOG_FILE", default="logs/django.log")
 
 # Ensure logs directory exists
 LOG_DIR = Path(LOG_FILE).parent
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-
-    'formatters': {
-        'verbose': {
-            'format': '[{asctime}] {levelname} {name} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname}: {message}',
-            'style': '{',
-        },
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {"format": "[{asctime}] {levelname} {name} {message}", "style": "{"},
+        "simple": {"format": "{levelname}: {message}", "style": "{"},
     },
-
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-        'file': {
-            'level': LOG_LEVEL,
-            'class': 'logging.FileHandler',
-            'filename': LOG_FILE,
-            'formatter': 'verbose',
-        },
+    "handlers": {
+        "console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "simple"},
+        "file": {"level": LOG_LEVEL, "class": "logging.FileHandler", "filename": LOG_FILE, "formatter": "verbose"},
     },
-
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': LOG_LEVEL,
-            'propagate': True,
-        },
-        'land_registry': {
-            'handlers': ['console', 'file'],
-            'level': LOG_LEVEL,
-            'propagate': False,
-        },
+    "loggers": {
+        "django": {"handlers": ["console", "file"], "level": LOG_LEVEL, "propagate": True},
+        "land_registry": {"handlers": ["console", "file"], "level": LOG_LEVEL, "propagate": False},
     },
 }

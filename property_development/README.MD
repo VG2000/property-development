@@ -14,6 +14,9 @@ docker compose -f docker-compose.dev.yml exec web python manage.py import_epc_da
 # Populate PropertyProfiles table
 docker compose -f docker-compose.dev.yml exec web python manage.py populate_property_profiles
 
+# Running Tailwind
+npx @tailwindcss/cli -i ./src/input.css -o ./static/css/output.css --watch
+
 # Running linter
 ruff check
 ruff check --watch

@@ -13,4 +13,5 @@ class EPCRecordAdmin(admin.ModelAdmin):
 
 @admin.register(PropertyProfile)
 class PropertyProfileAdmin(admin.ModelAdmin):
+    exclude = ['location']
     search_fields = ("property__address", "owner__name" )

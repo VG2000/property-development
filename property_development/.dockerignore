@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info
+*.eggs
+*.log
+
+# Environment
+.env
+.env.*
+*.sqlite3
+
+# Django collectstatic output (don’t send to Docker, generated inside container)
+staticfiles/
+media/
+
+# Node / Tailwind
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp/
+.pnp.js
+# Tailwind build cache
+.tailwindcss-cache/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker files
+Dockerfile
+docker-compose.yml
+
+# Tests & coverage
+.coverage
+htmlcov/
+pytest_cache/

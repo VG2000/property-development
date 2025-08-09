@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Interactive Map{% endblock %}
+
+{% block content %}
+<div class="pt-4 max-w-screen-xl mx-auto px-4 md:px-8 ">
+<h2 class="text-xl font-bold">Property Map</h2>
+
+<!-- Hidden input for HTMX -->
+<input type="hidden" id="bbox" name="bbox">
+
+<!-- Map Container -->
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  #map {
+    height: calc(100vh - 140px);
+    width: 100%;
+  }
+  #map-overlay {
+    padding: 1rem;
+  }
+</style>
+
+<div id="map-warning" class="text-red-600 font-semibold text-sm mb-2"></div>
+  <form id="map-filters" class="mb-2 flex gap-4 items-center">
+  <label class="text-sm">Min £/sqft:
+    <input type="number" name="min_sqft" class="border p-1 w-20" />
+  </label>
+  <label class="text-sm">Max £/sqft:
+    <input type="number" name="max_sqft" class="border p-1 w-20" />
+  </label>
+  <label class="text-sm">Min Price:
+    <input type="number" name="min_price" class="border p-1 w-24" />
+  </label>
+  <label class="text-sm">Deed After:
+    <input type="date" name="after_date" class="border p-1" />
+  </label>
+</form>
+<div id="map"></div>
+
+<!-- HTMX Container (starts with loading...) -->
+<div id="map-overlay"
+     hx-get="{% url 'map-data' %}"
+     hx-trigger="map-ready from:body, map-move"
+     hx-include="#bbox, #map-filters"
+     hx-target="#map-overlay"
+     hx-swap="innerHTML">
+
+
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const map = L.map('map').setView([53.2942, -3.8270], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Leaflet MarkerCluster group
+  let markerClusterGroup = L.markerClusterGroup();
+
+  function updateBBox() {
+    const bounds = map.getBounds();
+    const latPad = (bounds.getNorth() - bounds.getSouth()) * 0.05;
+    const lngPad = (bounds.getEast() - bounds.getWest()) * 0.05;
+    const bbox = [
+      bounds.getSouthWest().lng + lngPad,
+      bounds.getSouthWest().lat + latPad,
+      bounds.getNorthEast().lng - lngPad,
+      bounds.getNorthEast().lat - latPad
+    ].join(',');
+    document.getElementById('bbox').value = bbox;
+  }
+
+  function triggerMapUpdate() {
+    updateBBox();
+    const overlay = document.getElementById("map-overlay");
+    if (overlay) htmx.trigger(overlay, "map-move");
+  }
+
+  // Trigger initial map data load
+  map.whenReady(() => {
+    updateBBox();
+    htmx.trigger(document.getElementById("map-overlay"), "map-ready");
+  });
+
+  map.on("moveend", triggerMapUpdate);
+  map.on("zoomend", triggerMapUpdate);
+
+document.body.addEventListener('htmx:afterSwap', (e) => {
+  if (e.detail.target.id === 'map-overlay') {
+    // Cluster marker logic...
+    markerClusterGroup.clearLayers();
+    document.querySelectorAll('[data-marker]').forEach(el => {
+      const lat = parseFloat(el.dataset.lat);
+      const lng = parseFloat(el.dataset.lng);
+      const label = el.dataset.label;
+      const marker = L.marker([lat, lng]).bindPopup(label);
+      markerClusterGroup.addLayer(marker);
+    });
+    map.addLayer(markerClusterGroup);
+
+    // Update warning
+    const warningEl = document.querySelector("#map-warning");
+    const warningContent = document.querySelector("#map-warning-content");
+    if (warningEl && warningContent) {
+      warningEl.textContent = warningContent.dataset.warning;
+    }
+  }
+});
+  document.querySelectorAll('#map-filters input').forEach(input => {
+  input.addEventListener('change', () => {
+    updateBBox(); // make sure bbox is refreshed
+    htmx.trigger(document.getElementById('map-overlay'), 'map-move');
+  });
+});
+</script>
+
+{% endblock %}

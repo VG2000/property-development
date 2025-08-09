@@ -1,0 +1,16 @@
+{% if too_many %}
+  <div id="map-warning-content"
+       class=""
+       data-warning="⚠️ Too many points ({{ count }}) — zoom in to explore.">
+  </div>
+{% else %}
+  <div id="map-warning-content" data-warning=""></div>
+{% endif %}
+
+{% for f in features %}
+  <div data-marker
+       data-lat="{{ f.lat }}"
+       data-lng="{{ f.lng }}"
+       data-label="{{ f.label }}">
+  </div>
+{% endfor %}
