@@ -246,6 +246,8 @@ class Command(BaseCommand):
         if area is not None:
             area = float(area)
             if area > 200:
+                baseline += 2
+            if area > 140:
                 baseline += 1
             elif area < 50:
                 baseline -= 1

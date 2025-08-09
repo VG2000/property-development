@@ -27,9 +27,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "land_registry",
-    "maps",
     "projects",
     "users",
+    "insights"
 ]
 
 MIDDLEWARE = [

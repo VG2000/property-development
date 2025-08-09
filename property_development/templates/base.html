@@ -29,6 +29,46 @@
 </head>
 <body>
 
+    <nav class="bg-gray-800 text-white">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <!-- Brand -->
+      <a href="/" class="text-xl font-bold hover:text-gray-300">North Wales Data</a>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex space-x-6">
+        <a href="{% url 'map' %}" class="hover:text-gray-300">Map</a>
+        <a href="{% url 'projects-list' %}" class="hover:text-gray-300">Projects</a>
+        <a href="{% url 'insights' %}" class="hover:text-gray-300">Insights</a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button id="mobile-menu-button" class="focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 space-y-2">
+    <a href="{% url 'map' %}" class="block hover:text-gray-300">Map</a>
+    <a href="{% url 'projects-list' %}" class="block hover:text-gray-300">Projects</a>
+    <a href="{% url 'insights' %}" class="block hover:text-gray-300">Insights</a>
+  </div>
+</nav>
+
+<script>
+  document.getElementById('mobile-menu-button').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  });
+</script>
+
+
   {% block content %}
   {% endblock %}
 

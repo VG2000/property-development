@@ -49,11 +49,18 @@ def map_data_htmx_view(request):
         sale = p.land_registry_sale
         epc = p.epc_record
 
-        address = sale.full_address or f"{sale.paon} {sale.street}, {sale.postcode}"
-        floor_area = f"{epc.total_floor_area} m²" if epc and epc.total_floor_area else "N/A"
+        address = f"{sale.full_address}, {sale.postcode}" or f"{sale.paon} {sale.street}, {sale.postcode}"
+        floor_area_sqm = (
+            f"{epc.total_floor_area:,.0f} m²" if epc and epc.total_floor_area else "N/A"
+        )
+        floor_area_sqft = (
+            f"{float(epc.total_floor_area) * 10.7639:,.0f} sqft"
+            if epc and epc.total_floor_area
+            else "N/A"
+        )
         hab_rooms = epc.number_habitable_rooms if epc and epc.number_habitable_rooms else "N/A"
-        price_sqft = f"{p.price_per_sq_ft:.0f}" if p.price_per_sq_ft else "N/A"
-        price_sqm = f"{p.price_per_sq_metre:.0f}" if p.price_per_sq_metre else "N/A"
+        price_sqft = f"{p.price_per_sq_ft:,.0f}" if p.price_per_sq_ft else "N/A"
+        price_sqm = f"{p.price_per_sq_metre:,.0f}" if p.price_per_sq_metre else "N/A"
 
         label = (
             f"<div class='text-sm leading-tight'>"
@@ -62,9 +69,11 @@ def map_data_htmx_view(request):
             f"<div>{p.estimated_num_bedrooms or '?'} beds "
             f"— <span class='font-medium'>£{price_sqft}/sqft</span> "
             f"— <span class='font-medium'>£{price_sqm}/m²</span></div>"
-            f"<div class='text-gray-600'>Area: {floor_area} — Rooms: {hab_rooms}</div>"
+            f"<div class='text-gray-600'>Area: {floor_area_sqft} — {floor_area_sqm}</div>"
+            f"<div class='text-gray-600'>Habitable Rooms: {hab_rooms}</div>"
             f"</div>"
         )
+
 
         features.append({
             'id': p.id,
