@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -92,6 +93,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# Media (LOCAL)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Allow embedding from same-origin (useful for iframed PDFs)
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

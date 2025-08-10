@@ -1,7 +1,9 @@
 from django.contrib.gis.geos import Polygon
 from django.shortcuts import render
 from django.utils.dateparse import parse_date
+
 from .models import PropertyProfile
+
 
 def map_data_htmx_view(request):
     bbox = request.GET.get('bbox')

@@ -210,3 +210,5 @@ __marimo__/
 # Node.js
 node_modules/
 
+# Media files
+media/

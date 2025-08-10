@@ -1,8 +1,223 @@
 {% extends "base.html" %}
 {% block title %}Insights{% endblock %}
+
 {% block content %}
-<div class="container mx-auto px-4 py-6">
-  <h1 class="text-2xl font-bold mb-4">North Wales Insights</h1>
-  <p>Tourism, demographics, and key economic data will go here.</p>
+<div class="container mx-auto px-4 py-6 space-y-6">
+  <header>
+    <section class="max-w-5xl mx-auto bg-white border rounded-xl shadow-sm p-6 space-y-6">
+  <header class="space-y-1">
+    <h2 class="text-2xl font-bold">North Wales Overview</h2>
+    <p class="text-gray-500">Primer for investors unfamiliar with the region</p>
+  </header>
+
+  <!-- Geography & Economy -->
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Geography &amp; Economic Shape</h3>
+    <p class="text-gray-700 leading-relaxed">
+      North Wales stretches from the English border at Wrexham and Flintshire along the A55 corridor to the ferry port at Holyhead on Anglesey (Ynys Môn), and south into Eryri (Snowdonia) National Park. The region is effectively two economies. To the east, Wrexham–Deeside behaves like a spillover of the Liverpool–Manchester–Chester city region: good road/rail connectivity, large employment parks, and a steady commuter base. To the west, Conwy, Denbighshire, Gwynedd, and Anglesey are defined by coastal towns, rural villages, tourism, and a growing clean-energy footprint tied to the Irish Sea.
+    </p>
+  </div>
+
+  <!-- Demographics -->
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Demographics &amp; Communities</h3>
+    <p class="text-gray-700 leading-relaxed">
+      Population centres include Wrexham (city status since 2022), the coastal arc of Rhyl–Colwyn Bay–Llandudno–Conwy, the university town of Bangor, and Holyhead. Demographically, the east skews working-age with industrial and logistics jobs; the west has an older profile in many coastal and rural communities, balanced by students in Bangor and younger households in larger resorts. Welsh language use is a distinctive factor—particularly strong in Gwynedd and Anglesey—so community engagement and branding that respect bilingual norms can matter.
+    </p>
+  </div>
+
+  <!-- Transport & Infrastructure -->
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Transport &amp; Infrastructure</h3>
+    <p class="text-gray-700 leading-relaxed">
+      Transport is a strength. The A55 expressway links to the M56 for Manchester Airport and the wider motorway network. Rail runs Holyhead–Chester–London Euston. Holyhead is a major Ireland–UK gateway; ports at Mostyn and Holyhead support offshore wind operations. Bangor University and the Menai Science Park (M-SParc) anchor research and innovation, especially in marine, environmental, and digital sectors.
+    </p>
+  </div>
+</section>
+
+  </header>
+
+  <section class="max-w-5xl mx-auto bg-white border rounded-xl shadow-sm p-6 space-y-6">
+  <header class="space-y-1">
+    <h2 class="text-2xl font-bold">North Wales: Accommodation Market Snapshot (2023)</h2>
+    <p class="text-gray-500">Key signals from the Wales Accommodation Occupancy Survey</p>
+  </header>
+
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Hotels (Serviced)</h3>
+    <p class="text-gray-700 leading-relaxed">
+      On chain-hotel data (STR/CoStar panel), North Wales recorded the strongest average hotel occupancy in Wales in 2023 at
+      <strong>~81%</strong>, with a clear seasonal peak in Q3 (Jul–Sep). Average Daily Rate also peaks in August, feeding a Q3 RevPAR high
+      before easing into Q4. Visitor mix across serviced stays remains heavily UK-led (~5/6 UK, ~1/6 overseas), with overseas share
+      rising in peak months.
+    </p>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Self-Catering & Short-Lets</h3>
+    <p class="text-gray-700 leading-relaxed">
+      Short-let data (Lighthouse) shows North Wales had an annual occupancy average of <strong>~52%</strong> in 2023, the lowest of the four Welsh
+      regions, but with the biggest seasonal swing: roughly <strong>~42%</strong> in Q1 rising to <strong>~66%</strong> in Q3. Larger, agency-managed portfolios
+      consistently outperform independents in occupancy across self-catering, reflecting distribution reach and yield management.
+    </p>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Caravan, Camping & Hostels</h3>
+    <p class="text-gray-700 leading-relaxed">
+      Pitches reached strong levels in May–June but stalled in July–August 2023 due to poor weather, underlining weather
+      sensitivity in peak season. Hostels show sharp seasonality too (peaking ~71% in August), with small monthly samples creating
+      variability.
+    </p>
+  </div>
+
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">What this means for investors</h3>
+    <ul class="list-disc pl-5 text-gray-700 space-y-2">
+      <li><strong>Hotels near A55 & coastal nodes</strong> benefit from robust peak-season demand and solid annual occupancy, particularly in North Wales vs other regions.</li>
+      <li><strong>Short-lets require seasonality planning:</strong> cashflows lean on Q2–Q3; Q1 is comparatively soft. Agency distribution can materially lift occupancy vs independent listings.</li>
+      <li><strong>Outdoor accommodation is weather-exposed:</strong> build contingency for soft peak months and consider ancillary revenue (activities, covered amenities). </li>
+    </ul>
+  </div>
+
+  <footer class="text-sm text-gray-500">
+    Source: Wales Accommodation Occupancy Survey 2023 (Visit Wales, SRI) with STR/CoStar hotels and Lighthouse short-let data.
+  </footer>
+</section>
+
+
+  <!-- Report 1 -->
+  <section aria-labelledby="report-1-heading" class="rounded border shadow overflow-hidden">
+    <div class="px-4 py-2 border-b bg-gray-50 flex items-center gap-3">
+      <h2 id="report-1-heading" class="font-semibold">Accommodation Survey 2023</h2>
+      <a href="{{ accommodation_survey_2023 }}" class="ml-auto text-sm underline" download>
+        Download PDF
+      </a>
+      <a href="{{ accommodation_survey_2023 }}#zoom=page-width&page=1" class="text-sm underline" target="_blank" rel="noopener">
+        Open in new tab
+      </a>
+    </div>
+
+    <!-- Prefer <object> for graceful fallback; keep iframe as a secondary option if you like -->
+    <div class="bg-gray-100">
+      <object
+        data="{{ accommodation_survey_2023 }}"
+        type="application/pdf"
+        class="w-full h-[30vh] md:h-[40vh]"
+      >
+        <!-- Fallback content shown if PDF can't be embedded -->
+        <div class="p-4 text-center space-y-2">
+          <p>It looks like your browser can’t display this PDF inline.</p>
+          <p>
+            <a class="underline text-blue-700" href="{{ accommodation_survey_2023 }}" target="_blank" rel="noopener">
+              Open the report in a new tab
+            </a>
+            &nbsp;or&nbsp;
+            <a class="underline text-blue-700" href="{{ accommodation_survey_2023 }}" download>
+              download it
+            </a>.
+          </p>
+        </div>
+      </object>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto bg-white border rounded-xl shadow-sm p-6 space-y-8">
+  <header class="space-y-1">
+    <h2 class="text-2xl font-bold">Day Trips Market – North Wales Lens (2024)</h2>
+    <p class="text-gray-500">Key signals from GB day-trip statistics, spotlighting what matters for North Wales.</p>
+  </header>
+
+  <!-- KPIs -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="rounded-lg border p-4">
+      <p class="text-sm text-gray-500">Wales leisure day trips (3h+)</p>
+      <p class="text-2xl font-semibold">157.8m</p>
+      <p class="text-xs text-gray-500">Spend £5.50bn</p>
+    </div>
+    <div class="rounded-lg border p-4">
+      <p class="text-sm text-gray-500">Tourism day trips (Wales)</p>
+      <p class="text-2xl font-semibold">53.3m</p>
+      <p class="text-xs text-gray-500">Spend £2.41bn</p>
+    </div>
+    <div class="rounded-lg border p-4">
+      <p class="text-sm text-gray-500">Avg spend (3h+ leisure)</p>
+      <p class="text-2xl font-semibold">£35</p>
+      <p class="text-xs text-gray-500">Wales vs GB £43</p>
+    </div>
+    <div class="rounded-lg border p-4">
+      <p class="text-sm text-gray-500">Avg spend (tourism day trip)</p>
+      <p class="text-2xl font-semibold">£45</p>
+      <p class="text-xs text-gray-500">Wales vs GB £53</p>
+    </div>
+  </div>
+  <p class="text-xs text-gray-500">KPIs are Wales-level; useful proxies for North Wales day-trip demand. :contentReference[oaicite:0]{index=0}</p>
+
+  <!-- Activity Mix -->
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">What day-trippers do</h3>
+    <ul class="list-disc pl-5 text-gray-700 space-y-1">
+      <li><span class="font-medium">Visiting friends & relatives</span> is #1 (≈27% of tourism day trips in Wales).</li>
+      <li><span class="font-medium">Visitor attractions</span> are #2 (≈16%).</li>
+      <li><span class="font-medium">Food & drink / nights out / speciality shopping</span> rank #3 (≈13%). :contentReference[oaicite:1]{index=1}</li>
+    </ul>
+    <p class="text-gray-600 text-sm">Implication for North Wales: experiences around attractions (e.g., heritage/coastal), VFR-friendly amenities, and strong F&amp;B offers reinforce demand. (Activity shares are Wales-level.) :contentReference[oaicite:2]{index=2}</p>
+  </div>
+
+  <!-- Seasonality -->
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Seasonality & quarterly pattern (Wales)</h3>
+    <p class="text-gray-700 leading-relaxed">
+      2024 volumes dipped vs 2023 (−7% for 3h+ leisure; −13% for tourism day trips), with the peak in <span class="font-medium">Q3</span> (Jul–Sep). Quarterly Wales totals (3h+ leisure):
+      Q1 38.9m, Q2 41.4m, <span class="font-medium">Q3 41.7m</span>, Q4 35.8m; spend also peaks in Q3. For tourism day trips, Q3 remains the high point (16.85m trips). :contentReference[oaicite:3]{index=3}
+    </p>
+    <p class="text-gray-600 text-sm">Implication for North Wales: plan pricing, staffing, and marketing for a pronounced Q3 surge, with resilience tactics for softer Q1/Q4. :contentReference[oaicite:4]{index=4}</p>
+  </div>
+
+  <!-- Who visits Wales -->
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Where visitors come from</h3>
+    <p class="text-gray-700 leading-relaxed">
+      Around <span class="font-medium">60%</span> of tourism day trips in Wales come from Wales residents; most of the rest are from England—especially the <span class="font-medium">North West</span> and <span class="font-medium">West Midlands</span>. For North Wales, easy access from Merseyside/Cheshire and the West Midlands underpins strong day-trip catchments along the A55 corridor. :contentReference[oaicite:5]{index=5}
+    </p>
+  </div>
+
+  <!-- Context vs GB -->
+  <div class="space-y-3">
+    <h3 class="text-lg font-semibold text-gray-800">Context vs GB</h3>
+    <p class="text-gray-700 leading-relaxed">
+      Wales accounts for ~<span class="font-medium">6%</span> of GB leisure day trips (3h+) and ~<span class="font-medium">5%</span> of spend; for tourism day trips, ~<span class="font-medium">5%</span> of trips and ~<span class="font-medium">4%</span> of spend. Average spend per trip is lower than GB, so yield often comes from peak periods, product mix, and ancillary sales. :contentReference[oaicite:6]{index=6}
+    </p>
+  </div>
+
+  <footer class="text-sm text-gray-500">
+    Source: Domestic GB Tourism Statistics – Day Trips in Wales, 2024 (Welsh Government). Figures are Wales-level; North Wales takeaways are contextual inferences. :contentReference[oaicite:7]{index=7}
+  </footer>
+</section>
+
+
+  <!-- Report 2 -->
+  <section aria-labelledby="report-2-heading" class="rounded border shadow overflow-hidden">
+    <div class="px-4 py-2 border-b bg-gray-50 flex items-center gap-3">
+      <h2 id="report-2-heading" class="font-semibold">Domestic Statistics</h2>
+      <a href="{{ domestic_stats }}" class="ml-auto text-sm underline" download>
+        Download PDF
+      </a>
+      <a href="{{ domestic_stats }}#zoom=page-width&page=1" class="text-sm underline" target="_blank" rel="noopener">
+        Open in new tab
+      </a>
+    </div>
+
+    <!-- If you prefer iframe, this one is fine—just lazy-load it -->
+    <div class="bg-gray-100">
+      <iframe
+        src="{{ domestic_stats }}"
+        title="Domestic Statistics PDF"
+        class="w-full h-[30vh] md:h-[40vh]"
+        loading="lazy"
+        style="border:0;"
+      ></iframe>
+    </div>
+  </section>
 </div>
 {% endblock %}
