@@ -1,26 +1,60 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Conwy County – Investor Brief{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-6 space-y-8 max-w-4xl">
+<div class="container mx-auto px-4 py-6 space-y-8 max-w-5xl">
   <header class="space-y-1">
     <h1 class="text-3xl font-bold">Conwy County – Investor Brief</h1>
     <p class="text-gray-600">Connectivity, demand drivers, and priorities shaping the visitor economy.</p>
   </header>
 
-  <!-- Snapshot -->
-  <section class="rounded border shadow-sm p-6 space-y-3 bg-white">
-    <h2 class="text-xl font-semibold">Why Conwy?</h2>
-    <p class="text-gray-700 leading-relaxed">
-      Conwy sits at the heart of North Wales with sea–mountain geography, quick access to the A55/A470,
-      and rail via Llandudno Junction to London in ~3 hours. Within a 3-hour drive it captures most major
-      North-West England conurbations—fuel for strong day and short-break markets.
-    </p>
-    <p class="text-gray-700 leading-relaxed">
-      Tourism is a cornerstone sector: <strong>~7.8m visitors</strong> generated an estimated
-      <strong>£729m</strong> in 2021 (STEAM), rebounding from pandemic effects (2019: ~£996m). Staying
-      visitors (~1.61m) punch above their weight—nearly double the economic impact of day trippers.
-    </p>
+  <!-- Snapshot + Image -->
+  <section class="rounded border shadow-sm p-6 bg-white">
+    <div class="md:grid md:grid-cols-5 md:gap-6">
+      <div class="md:col-span-3 space-y-3">
+        <h2 class="text-xl font-semibold">Why Conwy?</h2>
+        <p class="text-gray-700 leading-relaxed">
+          Conwy sits at the heart of North Wales with sea–mountain geography, quick access to the A55/A470,
+          and rail via Llandudno Junction to London in ~3 hours. Within a 3-hour drive it captures most major
+          conurbations in England including : Manchester, Liverpool, Stoke-on-Trent, Leeds, Sheffield, Chester and Birmingham.
+          According to the ONS, there is an associated population of over 15 million people within 2.5 hours drive of Llandudno.
+          <sup>
+        <a href="https://www.ons.gov.uk/releases/traveltoworkareaanalysis"
+           class="text-xs text-blue-700 underline hover:text-blue-800"
+           target="_blank" rel="noopener noreferrer">source</a>
+      </sup>
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+         The county covers an area of 1,130 square kilometres at the heart of North Wales,
+         with a varied geography that runs from the coast into Eryri (Snowdonia) National Park
+         and offers a wide range of scenery and leisure opportunities. It has a population of around 115,000,
+          with the largest towns being Llandudno, Colwyn Bay and Conwy. Settlement is concentrated along the coast
+           and the Conwy Valley, with smaller market towns and rural communities extending into the national park.
+           The economy blends tourism, retail and public services with a growing adventure/heritage offer; seasonality
+           is pronounced but shoulder-season events and conferencing in Llandudno help smooth demand.
+        </p>
+      </div>
+
+      <aside class="md:col-span-2 mt-4 md:mt-0">
+        <figure class="rounded border overflow-hidden bg-gray-50">
+          <img
+            src="{% static 'images/ConwyConstituency.svg' %}"
+            alt="Conwy County highlighted on a map of Wales"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-64 md:h-full object-contain"
+          />
+        </figure>
+      </aside>
+    </div>
+      <div class="md:col-span-5 mt-4">
+      <p class="text-gray-700 leading-relaxed">
+        Tourism is a cornerstone sector: <strong>~7.8m visitors</strong> generated an estimated <strong>£729m</strong> in 2021 (STEAM),
+        rebounding from pandemic effects (2019: ~£996m). Staying visitors (~1.61m) punch above their weight—nearly
+        double the economic impact of day trippers.
+      </p>
+    </div>
   </section>
 
   <!-- Demand & Product -->
@@ -55,9 +89,9 @@
     <ul class="list-disc pl-5 text-gray-700 space-y-2">
       <li>Grow year-round value (events in shoulder months, stronger evening economy, food offer).</li>
       <li>Quality & sustainability: cleaner, better facilities; greener transport; data-led decisions.</li>
-      <li>Manage peak pressure & spread visitors to lesser-known areas; promote active travel. </li>
+      <li>Manage peak pressure & spread visitors to lesser-known areas; promote active travel.</li>
       <li>Skills & workforce: link business with training; utilise the Conwy Ambassador scheme.</li>
-      <li>Plan-led enablement: align with the Local Development Plan to support tourism investment. </li>
+      <li>Plan-led enablement: align with the Local Development Plan to support tourism investment.</li>
     </ul>
     <p class="text-sm text-gray-500">Source: Destination Conwy Management Plan 2023–2029.</p>
   </section>
@@ -70,12 +104,11 @@
       <li><strong>Holiday parks & high-quality self-catering</strong> (upgrade/amenities) on the East coast belt.</li>
       <li><strong>Town-centre mixed-use & F&amp;B</strong> to strengthen evening economy and shoulder season trade.</li>
       <li><strong>Experience-led attractions</strong> aligned to adventure/coastal and cultural heritage themes.</li>
-      <li><strong>Green mobility & infrastructure</strong> that supports the DMP’s sustainability goals. </li>
+      <li><strong>Green mobility & infrastructure</strong> that supports the DMP’s sustainability goals.</li>
     </ul>
     <p class="text-sm text-gray-500">Inferences based on DMP objectives and product mix outlined in the plan.</p>
   </section>
 
-  <!-- Optional inline PDF embed -->
   {% if brochure_pdf %}
   <section class="rounded border shadow overflow-hidden">
     <div class="px-4 py-2 border-b bg-gray-50 flex items-center gap-3">

@@ -32,7 +32,7 @@ def project_detail(request, pk):
             project.sheet_file.close()
 
     link_map = {
-    "Destination Conwy Management Plan": "conwy-county",
+    "Conwy County": "conwy-county",
     # "Day Trips Market – 2024": "day-trips-2024",
     # "Accommodation Survey 2023": "/insights/#accommodation"
 }

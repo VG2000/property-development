@@ -7,7 +7,7 @@ def insights_view(request):
         "accommodation_survey_2023": settings.MEDIA_URL + "pdfs/accommodation_survey_2023.pdf",
         "domestic_stats": settings.MEDIA_URL + "pdfs/day_trips_2024.pdf",
     }
-    return render(request, "insights.html", ctx)
+    return render(request, "north_wales.html", ctx)
 
 def conwy_county_view(request):
     brochure_pdf = settings.MEDIA_URL + "pdfs/Destination-Conwy-Management-Plan-2019-2029.pdf"
