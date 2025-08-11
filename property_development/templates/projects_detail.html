@@ -1,0 +1,118 @@
+<!-- templates/projects/detail.html -->
+{% extends "base.html" %}
+{% load text_links %}
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6 space-y-6">
+  <header class="space-y-1">
+    <h1 class="text-2xl font-bold">{{ project.title }}</h1>
+    <p class="text-gray-700 leading-relaxed
+            [&_a]:text-blue-700
+            [&_a]:underline
+            [&_a]:underline-offset-2
+            [&_a]:decoration-2
+            [&_a:hover]:text-blue-800
+            [&_a:focus]:outline-none [&_a:focus]:ring-2 [&_a:focus]:ring-blue-300
+            [&_a]:rounded-sm">
+    {{ project.description|smart_links_blank:link_map|linebreaksbr }}
+    </p>
+  </header>
+
+<!-- Project Brochure -->
+  {% if brochure_src %}
+<section aria-labelledby="brochure-heading" class="rounded border shadow overflow-hidden">
+  <div class="px-4 py-2 border-b bg-gray-50 flex items-center gap-3">
+    <h2 id="brochure-heading" class="font-semibold">
+      {{ project.brochure_title|default:"Sales Brochure" }}
+    </h2>
+    <a href="{{ brochure_src }}" class="ml-auto text-sm underline" download>
+      Download PDF
+    </a>
+    <a href="{{ brochure_src }}#zoom=page-width&page=1" class="text-sm underline" target="_blank" rel="noopener">
+      Open in new tab
+    </a>
+  </div>
+
+  <div class="bg-gray-100">
+    <!-- Use <object> for graceful fallback, or <iframe> if you prefer -->
+    <object
+      data="{{ brochure_src }}"
+      type="application/pdf"
+      class="w-full h-[30vh] md:h-[40vh]"
+    >
+      <div class="p-4 text-center space-y-2">
+        <p>Can’t display this PDF inline.</p>
+        <p>
+          <a class="underline" href="{{ brochure_src }}" target="_blank" rel="noopener">Open in new tab</a>
+          &nbsp;or&nbsp;
+          <a class="underline" href="{{ brochure_src }}" download>download it</a>.
+        </p>
+      </div>
+    </object>
+  </div>
+</section>
+{% endif %}
+
+
+  <!-- A. External spreadsheet embed (e.g., Google Sheets "Publish to web" iframe) -->
+  {% if project.sheet_url %}
+    <section class="rounded border shadow overflow-hidden">
+      <div class="px-4 py-2 bg-gray-50 border-b flex items-center gap-3">
+        <h2 class="font-semibold">Spreadsheet</h2>
+        <a class="ml-auto text-sm underline" href="{{ project.sheet_url }}" target="_blank" rel="noopener">Open in new tab</a>
+      </div>
+      <div class="bg-white">
+        <iframe
+          src="{{ project.sheet_url }}"
+          class="w-full h-[70vh] md:h-[80vh]"
+          style="border:0;"
+          loading="lazy"
+          title="Project Spreadsheet"
+        ></iframe>
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- B. Local CSV preview (simple table) -->
+  {% if csv_preview %}
+    <section class="rounded border shadow overflow-hidden">
+      <div class="px-4 py-2 bg-gray-50 border-b flex items-center gap-3">
+        <h2 class="font-semibold">Spreadsheet (CSV Preview)</h2>
+        <a class="ml-auto text-sm underline" href="{{ project.sheet_file.url }}" download>Download CSV</a>
+      </div>
+
+      <div class="overflow-auto">
+        <table class="min-w-full text-sm">
+          {% if csv_preview.headers %}
+          <thead class="bg-gray-100 sticky top-0">
+            <tr>
+              {% for h in csv_preview.headers %}
+                <th class="text-left font-medium px-3 py-2 border-b">{{ h }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          {% endif %}
+          <tbody>
+            {% for row in csv_preview.rows %}
+              <tr class="odd:bg-white even:bg-gray-50">
+                {% for cell in row %}
+                  <td class="px-3 py-2 border-b align-top">{{ cell }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="px-4 py-2 text-xs text-gray-500 bg-gray-50">
+        Showing first {{ csv_preview.rows|length }} rows. Download for full data.
+      </p>
+    </section>
+  {% endif %}
+
+  {% if not project.sheet_url and not csv_preview %}
+    <p class="text-gray-600">No spreadsheet attached to this project yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

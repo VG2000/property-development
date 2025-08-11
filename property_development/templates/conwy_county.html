@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Conwy County – Investor Brief{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6 space-y-8 max-w-4xl">
+  <header class="space-y-1">
+    <h1 class="text-3xl font-bold">Conwy County – Investor Brief</h1>
+    <p class="text-gray-600">Connectivity, demand drivers, and priorities shaping the visitor economy.</p>
+  </header>
+
+  <!-- Snapshot -->
+  <section class="rounded border shadow-sm p-6 space-y-3 bg-white">
+    <h2 class="text-xl font-semibold">Why Conwy?</h2>
+    <p class="text-gray-700 leading-relaxed">
+      Conwy sits at the heart of North Wales with sea–mountain geography, quick access to the A55/A470,
+      and rail via Llandudno Junction to London in ~3 hours. Within a 3-hour drive it captures most major
+      North-West England conurbations—fuel for strong day and short-break markets.
+    </p>
+    <p class="text-gray-700 leading-relaxed">
+      Tourism is a cornerstone sector: <strong>~7.8m visitors</strong> generated an estimated
+      <strong>£729m</strong> in 2021 (STEAM), rebounding from pandemic effects (2019: ~£996m). Staying
+      visitors (~1.61m) punch above their weight—nearly double the economic impact of day trippers.
+    </p>
+  </section>
+
+  <!-- Demand & Product -->
+  <section class="rounded border shadow-sm p-6 space-y-3 bg-white">
+    <h2 class="text-xl font-semibold">Demand & Accommodation</h2>
+    <p class="text-gray-700">
+      Llandudno is the serviced-accommodation hub of North Wales with <strong>~15,000 beds</strong> per night;
+      the East coast holds significant <strong>~50,000</strong> non-serviced (static) beds. The county offers a broad
+      mix—hotels, self-catering, holiday parks, hostels and camping—supporting diverse price points and
+      stay patterns.
+    </p>
+    <p class="text-gray-700">
+      Core drivers: coastline (45 miles; 17.5% Heritage Coast), Eryri landscapes (38% of county in the park),
+      World Heritage (Conwy Castle & Town Walls), adventure attractions (Surf Snowdonia, Zip World), and
+      marquee venues (Venue Cymru) and gardens (Bodnant).
+    </p>
+  </section>
+
+  <!-- Connectivity & Catchment -->
+  <section class="rounded border shadow-sm p-6 space-y-3 bg-white">
+    <h2 class="text-xl font-semibold">Connectivity & Catchment</h2>
+    <p class="text-gray-700">
+      The A55 links directly to the M56 (Manchester/Liverpool airports). Rail connectivity and proximity to
+      Holyhead strengthen Ireland–UK flows. The 3-hour road catchment underpins resilient domestic demand
+      for day trips and short stays year-round.
+    </p>
+  </section>
+
+  <!-- Strategy & Priorities -->
+  <section class="rounded border shadow-sm p-6 space-y-3 bg-white">
+    <h2 class="text-xl font-semibold">What the County is Targeting (2023–2029)</h2>
+    <ul class="list-disc pl-5 text-gray-700 space-y-2">
+      <li>Grow year-round value (events in shoulder months, stronger evening economy, food offer).</li>
+      <li>Quality & sustainability: cleaner, better facilities; greener transport; data-led decisions.</li>
+      <li>Manage peak pressure & spread visitors to lesser-known areas; promote active travel. </li>
+      <li>Skills & workforce: link business with training; utilise the Conwy Ambassador scheme.</li>
+      <li>Plan-led enablement: align with the Local Development Plan to support tourism investment. </li>
+    </ul>
+    <p class="text-sm text-gray-500">Source: Destination Conwy Management Plan 2023–2029.</p>
+  </section>
+
+  <!-- Investor angles -->
+  <section class="rounded border shadow-sm p-6 space-y-3 bg-white">
+    <h2 class="text-xl font-semibold">Investor Angles</h2>
+    <ul class="list-disc pl-5 text-gray-700 space-y-2">
+      <li><strong>Serviced & Aparthotel</strong> near Llandudno/Conwy: taps robust coastal demand and events.</li>
+      <li><strong>Holiday parks & high-quality self-catering</strong> (upgrade/amenities) on the East coast belt.</li>
+      <li><strong>Town-centre mixed-use & F&amp;B</strong> to strengthen evening economy and shoulder season trade.</li>
+      <li><strong>Experience-led attractions</strong> aligned to adventure/coastal and cultural heritage themes.</li>
+      <li><strong>Green mobility & infrastructure</strong> that supports the DMP’s sustainability goals. </li>
+    </ul>
+    <p class="text-sm text-gray-500">Inferences based on DMP objectives and product mix outlined in the plan.</p>
+  </section>
+
+  <!-- Optional inline PDF embed -->
+  {% if brochure_pdf %}
+  <section class="rounded border shadow overflow-hidden">
+    <div class="px-4 py-2 border-b bg-gray-50 flex items-center gap-3">
+      <h2 class="font-semibold">Destination Conwy Management Plan (PDF)</h2>
+      <a class="ml-auto text-sm underline" href="{{ brochure_pdf }}" download>Download PDF</a>
+      <a class="text-sm underline" href="{{ brochure_pdf }}#zoom=page-width&page=1" target="_blank" rel="noopener">Open in new tab</a>
+    </div>
+    <div class="bg-gray-100">
+      <object data="{{ brochure_pdf }}" type="application/pdf" class="w-full h-[60vh] md:h-[70vh]">
+        <div class="p-4 text-center text-sm">Can’t display the PDF. <a class="underline" href="{{ brochure_pdf }}" target="_blank" rel="noopener">Open in new tab</a>.</div>
+      </object>
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

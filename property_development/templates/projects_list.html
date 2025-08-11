@@ -1,8 +1,19 @@
+<!-- templates/projects/index.html -->
 {% extends "base.html" %}
 {% block title %}Projects{% endblock %}
 {% block content %}
 <div class="container mx-auto px-4 py-6">
   <h1 class="text-2xl font-bold mb-4">Projects</h1>
-  <p>List all property development projects here...</p>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for p in projects %}
+      <a href="{% url 'project-detail' p.pk %}" class="block rounded-lg border shadow-sm p-4 hover:shadow-md transition">
+        <h2 class="font-semibold text-lg mb-1">{{ p.title }}</h2>
+        <p class="text-sm text-gray-600 line-clamp-3">{{ p.description }}</p>
+      </a>
+    {% empty %}
+      <p class="text-gray-600">No projects yet.</p>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

@@ -6,12 +6,7 @@ import environ
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
 env = environ.Env()
-env_file = (
-    os.path.join(BASE_DIR, ".env.dev")
-    if os.environ.get("DJANGO_SETTINGS_MODULE", "").endswith("dev")
-    else None
-)
-environ.Env.read_env(env_file)
+environ.Env.read_env(BASE_DIR / ".env.dev") 
 
 SECRET_KEY = env("SECRET_KEY", default="not-so-secret-in-dev")
 
@@ -30,7 +25,7 @@ INSTALLED_APPS = [
     "land_registry",
     "projects",
     "users",
-    "insights"
+    "insights",
 ]
 
 MIDDLEWARE = [
