@@ -33,7 +33,7 @@
   <div class="container mx-auto px-4">
     <div class="flex items-center justify-between h-16">
       <!-- Welsh Flag -->
-      <a href="/" class="flex items-center gap-2">
+      <a href="/insights" class="flex items-center gap-2">
   <img src="{% static 'images/Flag_of_Wales.svg.png' %}"
        alt=""
        class="h-8 w-auto" />
@@ -45,6 +45,15 @@
          <a href="{% url 'conwy-county' %}" class="hover:text-gray-300">Conwy County</a>
         <a href="{% url 'map' %}" class="hover:text-gray-300">Land Registry Map</a>
         <a href="{% url 'projects-list' %}" class="hover:text-gray-300">Projects</a>
+{% if user.is_authenticated %}
+  <form method="post" action="{% url 'logout' %}" class="inline">
+    {% csrf_token %}
+    <button type="submit" class="hover:text-gray-300">Log out</button>
+  </form>
+{% else %}
+  <a href="{% url 'login' %}" class="hover:text-gray-300">Log in</a>
+{% endif %}
+
 
       </div>
 

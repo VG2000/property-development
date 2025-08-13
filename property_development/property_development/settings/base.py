@@ -6,7 +6,7 @@ import environ
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
 env = environ.Env()
-environ.Env.read_env(BASE_DIR / ".env.dev") 
+environ.Env.read_env(BASE_DIR / ".env.dev")
 
 SECRET_KEY = env("SECRET_KEY", default="not-so-secret-in-dev")
 
@@ -26,6 +26,10 @@ INSTALLED_APPS = [
     "projects",
     "users",
     "insights",
+]
+
+INSTALLED_APPS += [
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +127,8 @@ LOGGING = {
         "land_registry": {"handlers": ["console", "file"], "level": LOG_LEVEL, "propagate": False},
     },
 }
+
+# Authentication
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "projects-list"    # after successful login
+LOGOUT_REDIRECT_URL = "insights"           # after logout

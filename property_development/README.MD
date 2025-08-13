@@ -1,6 +1,9 @@
 # To run in dev:
 docker compose -f docker-compose.dev.yml up --build -d
 
+# To make migrations
+python manage.py makemigrations --settings=property_development.settings.dev
+
 # To run in prod:
 docker compose -f docker-compose.prod.yml up --build -d
 

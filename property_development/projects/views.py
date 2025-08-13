@@ -1,17 +1,61 @@
 # projects/views.py
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView
-from .models import Project
-import csv, io
+import csv
+import io
 
-class ProjectListView(ListView):
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
+from django.shortcuts import get_object_or_404, render
+from django.views.generic import ListView
+
+from .models import Project, ProjectAccessLog
+
+
+class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
     template_name = "projects_list.html"
     context_object_name = "projects"
     ordering = ["title"]
+    login_url = "login"            
+    redirect_field_name = "next"
 
+    # Only show projects the user is allowed to see
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.user.is_staff:
+            return qs
+        return qs.filter(allowed_investors=self.request.user)
+
+
+def _client_ip(request):
+    xff = request.META.get("HTTP_X_FORWARDED_FOR")
+    return xff.split(",")[0].strip() if xff else request.META.get("REMOTE_ADDR")
+
+def _log(request, project, allowed, reason=""):
+        ProjectAccessLog.objects.create(
+        project=project,
+        user=request.user if request.user.is_authenticated else None,
+        status=ProjectAccessLog.ALLOWED if allowed else ProjectAccessLog.DENIED,
+        reason=reason,
+        ip=_client_ip(request),
+        user_agent=request.META.get("HTTP_USER_AGENT", "")[:500],
+        path=request.get_full_path(),
+    )
+
+@login_required
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk)
+
+    is_allowed = (
+        request.user.is_staff
+        or project.allowed_investors.filter(pk=request.user.pk).exists()
+    )
+
+    if not is_allowed:
+        _log(request, project, allowed=False, reason="not_invited")
+        return HttpResponseForbidden("You have not been invited to view this project.")
+
+    _log(request, project, allowed=True)
 
     csv_preview = None
     # Very basic CSV preview (first 100 rows). Skip for non-CSV files.
