@@ -16,9 +16,9 @@ services:
     build:
       context: .
       dockerfile: docker/prod/Dockerfile
-    command: gunicorn property_development.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn property_development.wsgi:application --bind 0.0.0.0:8003
     ports:
-      - "8000:8000"
+      - "8003:8003"
     environment:
       DJANGO_SETTINGS_MODULE: property_development.settings.prod
     depends_on:
