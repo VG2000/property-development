@@ -44,6 +44,7 @@ services:
     volumes:
       - /home/ubuntu/property-development/property-development/data:/data:ro
       - /home/ubuntu/property-development/property-development/state:/state
+      - /home/ubuntu/property-development/property-development/media:/app/media
     healthcheck:
       # simple TCP check; you can also add a /healthz URL and curl it
       test: ["CMD-SHELL", "python -c 'import socket,sys;s=socket.socket();s.settimeout(2);s.connect((\"127.0.0.1\",8003));s.close();sys.exit(0)'"]

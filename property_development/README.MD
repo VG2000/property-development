@@ -17,8 +17,13 @@ docker compose -f docker-compose.prod.yml exec web bash
 python manage.py import_lr_data /data/ppd_data_conwy.csv
 
 # scp command to copy files from local into Lightsail
+# CSV data files
 scp -C -i ~/.ssh/LightsailDefaultKey-eu-west-2.pem \
   ~/Projects/Property-Development/data/*.csv \
+  ubuntu@3.10.241.170:/home/ubuntu/property-development/property-development/data/
+# Media pdfs
+scp -C -i ~/.ssh/LightsailDefaultKey-eu-west-2.pem \
+  ~/Projects/Property-Development/property_development/*.csv \
   ubuntu@3.10.241.170:/home/ubuntu/property-development/property-development/data/
 
 ### To seed data in development
