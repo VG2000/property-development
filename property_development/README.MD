@@ -7,6 +7,9 @@ python manage.py makemigrations --settings=property_development.settings.dev
 # To run in prod:
 docker compose -f docker-compose.prod.yml up --build -d
 
+# To check the logs on Lightsail
+docker compose -f docker-compose.prod.yml logs --tail=100
+
 ### To seed data
 # Land registry data
 docker compose -f docker-compose.dev.yml exec web python manage.py import_lr_data /data/ppd_data_conwy.csv
