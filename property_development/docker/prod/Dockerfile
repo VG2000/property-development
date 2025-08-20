@@ -1,16 +1,15 @@
-FROM python:3.13
+FROM python:3.12-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    binutils libproj-dev gdal-bin libpq-dev \
- && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gdal-bin libgdal-dev libgeos-dev libproj-dev libpq5 \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
-
-ENTRYPOINT ["sh", "docker/prod/entrypoint.sh"]
+RUN chmod +x docker/prod/entrypoint.sh
+ENTRYPOINT ["./docker/prod/entrypoint.sh"]

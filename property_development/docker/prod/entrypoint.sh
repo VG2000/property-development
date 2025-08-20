@@ -1,27 +1,60 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Optional: wait for Postgres (compose v3 no longer supports depends_on: condition)
-python - <<'PY'
-import os, time, psycopg2
-from urllib.parse import urlparse
+echo "[entrypoint] Waiting for Postgres..."
 
-url = os.environ["DATABASE_URL"]
-p = urlparse(url)
-for _ in range(30):
+# ---- Wait for Postgres using psycopg (v3) -----------------------------------
+python - <<'PY'
+import os, time, sys
+try:
+    import psycopg
+except Exception as e:
+    print("psycopg import failed:", e, file=sys.stderr)
+    sys.exit(1)
+
+retries = int(os.getenv("DB_WAIT_RETRIES", "30"))
+sleep = int(os.getenv("DB_WAIT_SLEEP", "2"))
+
+def dsn_from_env():
+    url = os.getenv("DATABASE_URL")
+    if url:
+        return url
+    # Compose-style envs:
+    host = os.getenv("POSTGRES_HOST", "db")
+    port = os.getenv("POSTGRES_PORT", "5432")
+    db   = os.getenv("POSTGRES_DB")
+    user = os.getenv("POSTGRES_USER")
+    pw   = os.getenv("POSTGRES_PASSWORD")
+    if not all([db, user, pw]):
+        print("Missing DB envs: set POSTGRES_DB/USER/PASSWORD or DATABASE_URL", file=sys.stderr)
+        sys.exit(1)
+    return f"postgresql://{user}:{pw}@{host}:{port}/{db}"
+
+dsn = dsn_from_env()
+for _ in range(retries):
     try:
-        psycopg2.connect(dbname=p.path.lstrip('/'), user=p.username, password=p.password,
-                         host=p.hostname, port=p.port or 5432).close()
+        with psycopg.connect(dsn, connect_timeout=3) as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
         break
-    except Exception:
-        time.sleep(2)
+    except Exception as e:
+        time.sleep(sleep)
 else:
-    raise SystemExit("Postgres not available")
+    print("Postgres not available after retries", file=sys.stderr)
+    sys.exit(1)
 PY
 
-# Run Django maintenance
-python manage.py migrate --noinput
-python manage.py collectstatic --noinput
+
+# ---- Django maintenance ------------------------------------------------------
+if [ "$APPLY_MIGRATIONS" = "1" ]; then
+  echo "[entrypoint] Applying migrations..."
+  python manage.py migrate --noinput
+fi
+
+if [ "$RUN_COLLECTSTATIC" = "1" ]; then
+  echo "[entrypoint] Collecting static..."
+  python manage.py collectstatic --noinput
+fi
 
 # Start gunicorn with sensible defaults (adjust workers for your vCPU count)
 exec gunicorn property_development.wsgi:application \
