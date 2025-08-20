@@ -1,30 +1,56 @@
-version: '3.9'
+networks:
+  app_net:
+
+volumes:
+  postgres_data:
 
 services:
   db:
     image: postgis/postgis:15-3.3
     environment:
-      POSTGRES_DB: prod_db
-      POSTGRES_USER: prod_user
-      POSTGRES_PASSWORD: prod_pass
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      # Optional: ensure the data dir is explicit
+      # PGDATA: /var/lib/postgresql/data/pgdata
+    # Do NOT publish 5432 to the Internet in prod
+    # ports:
+    #   - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app_net
 
   web:
     build:
       context: .
       dockerfile: docker/prod/Dockerfile
-    command: gunicorn property_development.wsgi:application --bind 0.0.0.0:8003
-    ports:
-      - "8003:8003"
+    # Run migrations & collectstatic before gunicorn
+    # (Use a tiny entrypoint script in your repo: docker/prod/entrypoint.sh)
+    command: ["/app/docker/prod/entrypoint.sh"]
     environment:
       DJANGO_SETTINGS_MODULE: property_development.settings.prod
-    depends_on:
-      - db
+      # Make sure these come from .env.prod
+      # SECRET_KEY, DATABASE_URL, ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, AWS_* if using S3, etc.
     env_file:
       - .env.prod
-
-volumes:
-  postgres_data:
+    depends_on:
+      - db
+    # Expose only the app port Nginx needs to proxy to
+    ports:
+      - "8003:8003"
+    healthcheck:
+      # simple TCP check; you can also add a /healthz URL and curl it
+      test: ["CMD-SHELL", "python -c 'import socket,sys;s=socket.socket();s.settimeout(2);s.connect((\"127.0.0.1\",8003));s.close();sys.exit(0)'"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app_net

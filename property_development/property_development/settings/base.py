@@ -6,7 +6,13 @@ import environ
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
 env = environ.Env()
-environ.Env.read_env(BASE_DIR / ".env.dev")
+
+# Only load a .env file if explicitly requested (or present)
+ENV_FILE = os.environ.get("DJANGO_ENV_FILE")
+if ENV_FILE:
+    environ.Env.read_env(BASE_DIR / ENV_FILE)
+elif (BASE_DIR / ".env").exists():
+    environ.Env.read_env(BASE_DIR / ".env")  # optional, local dev convenience
 
 SECRET_KEY = env("SECRET_KEY", default="not-so-secret-in-dev")
 
@@ -34,6 +40,7 @@ INSTALLED_APPS += [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -92,7 +99,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Media (LOCAL)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
