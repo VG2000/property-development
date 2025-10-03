@@ -51,3 +51,24 @@ ruff check --fix
 # Running Coverage
 coverage run manage.py test
 coverage report ### Aim for 80% ###
+
+
+## About the Platform
+
+A data-rich property development workspace for North Wales, combining land registry transactions, EPC intelligence, and curated investor collateral into a single, secure interface.
+Key Features
+
+Private Project Rooms: Role-based access gating with activity logging, brochure hosting, and instant CSV previews for investor diligence.
+Spatial Intelligence: Leaflet-powered sale map with HTMX-driven filters for price bands, £/sqft benchmarks, and deed dates across Conwy, Denbighshire, Gwynedd, and Flintshire.
+Market Insights: Editorial briefings and regional dossiers surfaced through tailored insights pages and embedded reference material.
+Data Pipelines: Management commands that ingest HM Land Registry and EPC datasets, fuse them into geocoded PropertyProfiles, and surface pricing metrics down to the parcel.
+Technical Stack
+
+Django 5 with PostGIS-backed PostgreSQL, HTMX for partial updates, Leaflet.js with marker clustering, and Tailwind CSS for responsive UI.
+Dockerised dev/prod environments with Gunicorn, Whitenoise, and Ruff/Coverage tooling baked in for linting and tests.
+What’s Next?
+
+Automated Alerts: Wire project access-denied signals into email notifications for faster investor onboarding.
+UI Polish: Deliver the planned sticky navigation and additional map overlays for planning constraints.
+Data Growth: Extend ingestion to commercial lettings, ONS socio-economic layers, and clean energy assets to deepen site selection analytics.
+Analytics Roadmap: Layer time-series sale trends, bedroom/£ per sqft benchmarking panels, and exportable investor decks.
